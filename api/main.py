@@ -36,14 +36,36 @@ async def serve_public(file_path: str):
         return FileResponse(file_location)
     return {"error": "File not found"}
 
+@app.get("/debug/files")
+async def debug_files():
+    import os
+    items = []
+    try:
+        for root, dirs, files in os.walk(BASE_DIR):
+            for file in files:
+                path = os.path.join(root, file)
+                items.append(path)
+    except Exception as e:
+        items.append(f"Error: {e}")
+    return {"BASE_DIR": BASE_DIR, "files": items}
+
 @app.get("/")
 async def read_index():
-    index_path = os.path.join(BASE_DIR, "public", "index.html")
-    print(f"DEBUG: Looking for index.html at: {index_path}")
-    print(f"DEBUG: File exists: {os.path.exists(index_path)}")
-    if os.path.exists(index_path):
-        with open(index_path, "r") as f:
-            return HTMLResponse(content=f.read())
+    # Try multiple possible paths
+    possible_paths = [
+        os.path.join(BASE_DIR, "public", "index.html"),
+        "/var/task/api/public/index.html",
+        os.path.join("/var/task/api", "public", "index.html"),
+    ]
+    
+    for index_path in possible_paths:
+        print(f"DEBUG: Trying {index_path}")
+        if os.path.exists(index_path):
+            print(f"DEBUG: Found at {index_path}")
+            with open(index_path, "r") as f:
+                return HTMLResponse(content=f.read())
+    
+    print(f"DEBUG: File not found in any path")
     return HTMLResponse(content="<h1>Frontend not available</h1>")
 
 @app.get("/redirect/@{username}")
