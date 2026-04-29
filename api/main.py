@@ -11,7 +11,7 @@ load_dotenv()
 ROBLOSECURITY = os.getenv("ROBLOSECURITY")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-template_path = os.path.join(BASE_DIR, "..", "assets", "status.svg.template")
+template_path = os.path.join(BASE_DIR, "assets", "status.svg.template")
 
 
 app = FastAPI()
@@ -25,23 +25,22 @@ app.add_middleware(
 )
 
 
-PUBLIC_DIR = os.path.join(BASE_DIR, "..", "public")
+PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 if os.path.exists(PUBLIC_DIR):
     app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
 
 @app.get("/public/{file_path:path}")
 async def serve_public(file_path: str):
-    file_location = os.path.join(BASE_DIR, "..", "public", file_path)
+    file_location = os.path.join(BASE_DIR, "public", file_path)
     if os.path.exists(file_location) and os.path.isfile(file_location):
         return FileResponse(file_location)
     return {"error": "File not found"}
 
 @app.get("/")
 async def read_index():
-    index_path = os.path.join(BASE_DIR, "..", "public", "index.html")
+    index_path = os.path.join(BASE_DIR, "public", "index.html")
     print(f"DEBUG: Looking for index.html at: {index_path}")
     print(f"DEBUG: File exists: {os.path.exists(index_path)}")
-    print(f"DEBUG: BASE_DIR: {BASE_DIR}")
     if os.path.exists(index_path):
         with open(index_path, "r") as f:
             return HTMLResponse(content=f.read())
