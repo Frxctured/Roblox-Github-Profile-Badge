@@ -16,14 +16,17 @@ template_path = os.path.join(BASE_DIR, "..", "assets", "status.svg.template")
 
 app = FastAPI()
 
+origins = [
+    "*"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 PUBLIC_DIR = os.path.join(BASE_DIR, "..", "public")
 app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
