@@ -39,6 +39,9 @@ async def serve_public(file_path: str):
 @app.get("/")
 async def read_index():
     index_path = os.path.join(BASE_DIR, "..", "public", "index.html")
+    print(f"DEBUG: Looking for index.html at: {index_path}")
+    print(f"DEBUG: File exists: {os.path.exists(index_path)}")
+    print(f"DEBUG: BASE_DIR: {BASE_DIR}")
     if os.path.exists(index_path):
         with open(index_path, "r") as f:
             return HTMLResponse(content=f.read())
