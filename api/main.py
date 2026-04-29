@@ -11,8 +11,10 @@ load_dotenv()
 ROBLOSECURITY = os.getenv("ROBLOSECURITY")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-template_path = os.path.join(BASE_DIR, "..", "assets", "status.svg.template")
+template_path = os.path.join(BASE_DIR, "assets", "status.svg.template")
+PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 
+app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
 
 app = FastAPI()
 
@@ -25,13 +27,13 @@ app.add_middleware(
 )
 
 
-PUBLIC_DIR = os.path.join(BASE_DIR, "..", "public")
-app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
-
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def read_index():
     index_path = os.path.join(PUBLIC_DIR, "index.html")
-    return FileResponse(index_path)
+    if os.path.exists(index_path):
+        with open(index_path, "r") as f:
+            return f.read()
+    return "Frontend not found"
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):

@@ -7,11 +7,11 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "api/main.py"
+      "src": "/public/(.*)",
+      "dest": "/api/public/$1"
     },
     {
-      "src": "/",
+      "src": "/(.*)",
       "dest": "api/main.py"
     }
   ]
