@@ -1,12 +1,14 @@
 {
-  "experimentalServices": {
-    "web": {
-      "entrypoint": "web",
-      "routePrefix": "/"
-    },
-    "api": {
-      "entrypoint": "api/main.py",
-      "routePrefix": "/api"
+  "builds": [
+    {
+      "src": "api/main.py",
+      "use": "@vercel/python"
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/main.py"
+    }
+  ]
 }
