@@ -1,6 +1,6 @@
 # Roblox Activity Github Profile Badge
 <p align="center">
-    <a href="http://localhost:8000/redirect/@frxctured0">
-        <img src="http://localhost:8000/user/@frxctured0">
+    <a href="https://roblox-github-profile-badge.vercel.app/redirect/@frxctured0">
+        <img src="https://roblox-github-profile-badge.vercel.app/user/@frxctured0">
     </a>
 </p>
