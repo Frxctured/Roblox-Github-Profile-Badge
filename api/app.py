@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 template_path = os.path.join(BASE_DIR, "..", "status.svg.template")
 
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):
