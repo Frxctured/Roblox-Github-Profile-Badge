@@ -16,7 +16,12 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return "Nothing to see here! \n\nUse the correct URLs ending in \n/user/@{username} or /user/{userid} for the badge.\nURLs ending in /redirect/@{username} or /redirect/{userid} to link to the users roblox profile."
+    return """Nothing to see here! 
+
+Use the correct URLs ending in:
+/user/@{username} or /user/{userid} for the badge.
+
+/redirect/@{username} or /redirect/{userid} to link to the users roblox profile."""
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):
