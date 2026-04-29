@@ -14,6 +14,10 @@ template_path = os.path.join(BASE_DIR, "..", "status.svg.template")
 
 app = FastAPI()
 
+@app.get("/")
+def home():
+    return "Nothing to see here! \n\nUse the correct URLs ending in \n/user/@{username} or /user/{userid} for the badge.\nURLs ending in /redirect/@{username} or /redirect/{userid} to link to the users roblox profile."
+
 @app.get("/redirect/@{username}")
 def redirect_username(username):
     userID = get_id_from_username(username)
