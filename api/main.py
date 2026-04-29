@@ -14,16 +14,14 @@ template_path = os.path.join(BASE_DIR, "..", "assets", "status.svg.template")
 
 app = FastAPI()
 
-@app.get("/", response_class=HTMLResponse)
-def read_root():
-    path = os.path.join(BASE_DIR, "..", "public", "index.html")
-    
-    try:
-        with open(path, "r") as f:
-            html_content = f.read()
-        return HTMLResponse(content=html_content, status_code=200)
-    except FileNotFoundError:
-        return HTMLResponse(content="<h1>Homepage coming soon</h1>", status_code=200)
+@app.get("/")
+def home():
+    return """Nothing to see here! 
+
+Use the correct URLs ending in:
+/user/@{username} or /user/{userid} for the badge.
+
+/redirect/@{username} or /redirect/{userid} to link to the users roblox profile."""
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):
