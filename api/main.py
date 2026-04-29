@@ -139,6 +139,7 @@ def get_id_from_username(username):
 def generate_badge(displayname, username, pfp_uri, game, status):
 
     status_map = {
+        3: "creating",
         2: "playing",
         1: "website",
         0: "offline"
