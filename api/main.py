@@ -3,7 +3,7 @@ import requests
 import base64
 from dotenv import load_dotenv
 from fastapi import FastAPI, Response
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 
 load_dotenv()
 ROBLOSECURITY = os.getenv("ROBLOSECURITY")
