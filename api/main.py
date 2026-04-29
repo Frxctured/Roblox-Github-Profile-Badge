@@ -31,10 +31,7 @@ if os.path.exists(PUBLIC_DIR):
 
 @app.get("/")
 async def read_index():
-    index_path = os.path.join(PUBLIC_DIR, "index.html")
-    if os.path.exists(index_path):
-        return FileResponse(index_path)
-    return {"message": "Frontend not available"}
+    return RedirectResponse(url="/public/index.html")
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):

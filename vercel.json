@@ -3,15 +3,19 @@
     {
       "src": "api/main.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "public",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "api/main.py"
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
     },
     {
-      "src": "/",
+      "src": "/(.*)",
       "dest": "api/main.py"
     }
   ]
