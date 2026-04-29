@@ -29,9 +29,20 @@ PUBLIC_DIR = os.path.join(BASE_DIR, "..", "public")
 if os.path.exists(PUBLIC_DIR):
     app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
 
+@app.get("/public/{file_path:path}")
+async def serve_public(file_path: str):
+    file_location = os.path.join(BASE_DIR, "..", "public", file_path)
+    if os.path.exists(file_location) and os.path.isfile(file_location):
+        return FileResponse(file_location)
+    return {"error": "File not found"}
+
 @app.get("/")
 async def read_index():
-    return RedirectResponse(url="/public/index.html")
+    index_path = os.path.join(BASE_DIR, "..", "public", "index.html")
+    if os.path.exists(index_path):
+        with open(index_path, "r") as f:
+            return HTMLResponse(content=f.read())
+    return HTMLResponse(content="<h1>Frontend not available</h1>")
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):
