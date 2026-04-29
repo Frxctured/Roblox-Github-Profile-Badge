@@ -14,7 +14,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 template_path = os.path.join(BASE_DIR, "assets", "status.svg.template")
 PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 
-app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
 
 app = FastAPI()
 
@@ -26,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():
