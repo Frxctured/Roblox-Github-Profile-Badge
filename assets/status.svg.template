@@ -1,0 +1,131 @@
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="400" height="100">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        * {
+          box-sizing: border-box;
+        }
+
+        .card {
+          height: 100px;
+          background: #111216;
+          border: 1px solid #393b44;
+          border-radius: 12px;
+          font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          display: flex;
+          align-items: center;
+          padding: 0 15px;
+          color: white;
+        }
+
+        .avatar-container {
+          width: 70px;
+          height: 70px;
+          background: #25272d;
+          border-radius: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 15px;
+          position: relative;
+        }
+
+        .profile-picture {
+          width: 70px;
+          height: 70px;
+          background: url('{{pfp}}');
+          background-size: contain;
+        }
+
+        .roblox-logo {
+          position: absolute;
+          left: 57%;
+          width: 30px;
+          height: 30px;
+          background: transparent;
+          outline: 37.5px solid white;
+          opacity: 0.2;
+          transform: rotate(15deg);
+        }
+
+        .info {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .display-name {
+          font-size: 18px;
+          font-weight: 700;
+          margin: 0;
+          line-height: 1.2;
+        }
+
+        .username {
+          font-size: 13px;
+          color: #adb5bd;
+          margin: 0;
+        }
+
+        .game-status {
+          font-size: 12px;
+          margin-top: 6px;
+          display: flex;
+          align-items: center;
+        }
+
+        .status-container {
+          display: flex;
+          align-items: center;
+          background: rgba(0,0,0,0.3);
+          padding: 4px 10px;
+          border-radius: 20px;
+          margin-left: auto;
+        }
+
+        .dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 6px;
+        }
+
+        .creating { background: #E29A00; }
+        .playing { background: #00E25B; }
+        .website { background: #00A2FF; }
+        .offline { background: #757575; }
+
+        .status-text {
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      </style>
+
+      <div class="card">
+        <div class="roblox-logo">
+        </div>
+
+        <div class="avatar-container">
+          <div class="profile-picture">
+          </div>
+        </div>
+        
+        <div class="info">
+          <p class="display-name">{{displayname}}</p>
+          <p class="username">@{{username}}</p>
+          <div class="game-status">
+            <span><strong>{{game}}</strong></span>
+          </div>
+        </div>
+
+        <div class="status-container">
+          <div class="dot {{status_class}}"></div>
+          <span class="status-text">{{status}}</span>
+        </div>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
