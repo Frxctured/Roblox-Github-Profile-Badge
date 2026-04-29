@@ -41,7 +41,6 @@ def redirect_userid(userID):
 def get_status_from_name(username: str):
     id = get_id_from_username(username)
     return get_status_from_id(id)
-#    ...
 
 
 @app.get("/user/{userID}")
