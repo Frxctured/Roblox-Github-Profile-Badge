@@ -91,7 +91,6 @@
           margin-right: 6px;
         }
 
-        .creating { background: #E29A00; }
         .playing { background: #00E25B; }
         .website { background: #00A2FF; }
         .offline { background: #757575; }
