@@ -13,6 +13,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 template_path = os.path.join(BASE_DIR, "assets", "status.svg.template")
 PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 
+html_path = os.path.join(BASE_DIR, "..", "public", "index.html")
+css_path = os.path.join(BASE_DIR, "..", "public", "style.css")
+js_path = os.path.join(BASE_DIR, "..", "public", "script.js")
+
 # Embedded frontend files
 HTML_CONTENT = """<!DOCTYPE html>
 <html lang="en">
@@ -402,15 +406,27 @@ if os.path.exists(PUBLIC_DIR):
 
 @app.get("/")
 async def home():
-    return HTMLResponse(content=HTML_CONTENT)
+    try:
+        with open(html_path, "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content=HTML_CONTENT)
 
 @app.get("/public/style.css")
 async def serve_css():
-    return Response(content=CSS_CONTENT, media_type="text/css")
+    try:
+        with open(css_path, "r") as f:
+            return Response(content=f.read(), media_type="text/css")
+    except FileNotFoundError:
+        return Response(content=CSS_CONTENT, media_type="text/css")
 
 @app.get("/public/script.js")
 async def serve_js():
-    return Response(content=JS_CONTENT, media_type="application/javascript")
+    try:
+        with open(js_path, "r") as f:
+            return Response(content=f.read(), media_type="application/javascript")
+    except FileNotFoundError:
+        return Response(content=JS_CONTENT, media_type="application/javascript")
 
 @app.get("/api/redirect/@{username}")
 def redirect_username(username):
