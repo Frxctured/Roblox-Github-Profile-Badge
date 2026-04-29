@@ -3,15 +3,14 @@ import requests
 import base64
 from dotenv import load_dotenv
 from fastapi import FastAPI, Response
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 ROBLOSECURITY = os.getenv("ROBLOSECURITY")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-template_path = os.path.join(BASE_DIR, "assets", "status.svg.template")
+template_path = os.path.join(BASE_DIR, "..", "assets", "status.svg.template")
 
 
 app = FastAPI()
@@ -24,71 +23,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-PUBLIC_DIR = os.path.join(BASE_DIR, "public")
-if os.path.exists(PUBLIC_DIR):
-    app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
-
-@app.get("/public/{file_path:path}")
-async def serve_public(file_path: str):
-    file_location = os.path.join(BASE_DIR, "public", file_path)
-    if os.path.exists(file_location) and os.path.isfile(file_location):
-        return FileResponse(file_location)
-    return {"error": "File not found"}
-
-@app.get("/debug/files")
-async def debug_files():
-    import os
-    items = []
-    try:
-        for root, dirs, files in os.walk(BASE_DIR):
-            for file in files:
-                path = os.path.join(root, file)
-                items.append(path)
-    except Exception as e:
-        items.append(f"Error: {e}")
-    return {"BASE_DIR": BASE_DIR, "files": items}
-
-@app.get("/")
-async def read_index():
-    # Try multiple possible paths
-    possible_paths = [
-        os.path.join(BASE_DIR, "public", "index.html"),
-        "/var/task/api/public/index.html",
-        os.path.join("/var/task/api", "public", "index.html"),
-    ]
-    
-    for index_path in possible_paths:
-        print(f"DEBUG: Trying {index_path}")
-        if os.path.exists(index_path):
-            print(f"DEBUG: Found at {index_path}")
-            with open(index_path, "r") as f:
-                return HTMLResponse(content=f.read())
-    
-    print(f"DEBUG: File not found in any path")
-    return HTMLResponse(content="<h1>Frontend not available</h1>")
-
-@app.get("/redirect/@{username}")
+@app.get("/api/redirect/@{username}")
 def redirect_username(username):
     userID = get_id_from_username(username)
     if userID <= 0:
         return RedirectResponse(url=f"https://www.roblox.com/search/users?keyword={username}")
     return redirect_userid(userID)
 
-@app.get("/redirect/{userID}")
+@app.get("/api/redirect/{userID}")
 def redirect_userid(userID):
     if userID <= 0:
         return RedirectResponse(url="https://www.roblox.com/search/users")
     
     return RedirectResponse(url=f"https://www.roblox.com/users/{userID}/profile")
 
-@app.get("/user/@{username}")
+@app.get("/api/user/@{username}")
 def get_status_from_name(username: str):
     id = get_id_from_username(username)
     return get_status_from_id(id)
 
 
-@app.get("/user/{userID}")
+@app.get("/api/user/{userID}")
 def get_status_from_id(userID: int):
 
     if userID <= 0:
