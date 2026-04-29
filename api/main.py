@@ -3,16 +3,38 @@ import requests
 import base64
 from dotenv import load_dotenv
 from fastapi import FastAPI, Response
-from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 ROBLOSECURITY = os.getenv("ROBLOSECURITY")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-template_path = os.path.join(BASE_DIR, "..", "status.svg.template")
+template_path = os.path.join(BASE_DIR, "..", "assets", "status.svg.template")
 
 
 app = FastAPI()
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+PUBLIC_DIR = os.path.join(BASE_DIR, "..", "public")
+app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
+
+@app.get("/")
+async def read_index():
+    index_path = os.path.join(PUBLIC_DIR, "index.html")
+    return FileResponse(index_path)
 
 @app.get("/redirect/@{username}")
 def redirect_username(username):
@@ -32,7 +54,6 @@ def redirect_userid(userID):
 def get_status_from_name(username: str):
     id = get_id_from_username(username)
     return get_status_from_id(id)
-#    ...
 
 
 @app.get("/user/{userID}")
@@ -129,6 +150,7 @@ def get_id_from_username(username):
 def generate_badge(displayname, username, pfp_uri, game, status):
 
     status_map = {
+        3: "creating",
         2: "playing",
         1: "website",
         0: "offline"
