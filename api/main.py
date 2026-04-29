@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse
-from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 ROBLOSECURITY = os.getenv("ROBLOSECURITY")
@@ -16,14 +15,6 @@ PUBLIC_DIR = os.path.join(BASE_DIR, "public")
 
 
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 app.mount("/public", StaticFiles(directory=PUBLIC_DIR), name="public")
 
