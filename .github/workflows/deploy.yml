@@ -1,4 +1,4 @@
-name: Build and deploy
+name: 🚀 Build and Deploy
 
 on:
   push:
@@ -23,24 +23,24 @@ jobs:
           cd backend
           composer install --no-dev --optimize-autoloader
 
-      - name: 🚀 Deploy Everything via Rsync
-        uses: appleboy/rsync-action@v0.1.3
+      - name: 🚀 Upload frontend to Hostpoint
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USERNAME }}
           key: ${{ secrets.SFTP_SSH_KEY }}
           port: 22
-          source: "backend,frontend"
-          target: "tmp"
-          # Custom script to move them to the right subdomains after upload
-          script: |
-            # Ensure target directories exist
-            mkdir -p ~/www/api.frxctured.com/roblox/github-badge/
-            mkdir -p ~/www/frxctured.com/roblox-badge/
-            
-            # Move the contents
-            mv ~/tmp/backend/{.,}* ~/www/api.frxctured.com/roblox/github-badge/ 2>/dev/null || true
-            mv ~/tmp/frontend/{.,}* ~/www/frxctured.com/roblox-badge/ 2>/dev/null || true
+          source: "frontend/*"
+          strip_components: 1 
+          target: "www/frxctured.com/roblox-badge"
 
-            # Cleanup tmp
-            rm -rf ~/tmp/backend ~/tmp/frontend
+      - name: 🚀 Upload backend to Hostpoint
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          key: ${{ secrets.SFTP_SSH_KEY }}
+          port: 22
+          source: "backend/**,backend/.htaccess"
+          strip_components: 1 
+          target: "www/api.frxctured.com/roblox/github-badge"
