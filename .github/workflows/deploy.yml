@@ -1,0 +1,54 @@
+name: Build and Deploy to Hostpoint
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2' 
+          extensions: mbstring, xml, ctype, iconv, curl
+          tools: composer:v2
+
+      - name: 📦 Install dependencies
+        working-directory: ./backend
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: 🚀 Upload backend to Hostpoint
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          key: ${{ secrets.SFTP_SSH_KEY }}
+          port: 22
+          source: "backend/*"
+          strip_components: 1 
+          target: "www/api.frxctured.com/roblox/github-badge"
+
+  build-and-deploy-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 🚀 Upload frontend to Hostpoint
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          key: ${{ secrets.SFTP_SSH_KEY }}
+          port: 22
+          source: "frontend/*"
+          strip_components: 1 
+          target: "www/frxctured.com/roblox-badge"
