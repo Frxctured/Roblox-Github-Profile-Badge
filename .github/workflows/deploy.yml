@@ -1,14 +1,6 @@
-name: Build and Deploy to Hostpoint
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
-  build-and-deploy-backend:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
@@ -16,39 +8,32 @@ jobs:
       - name: 🐘 Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2' 
-          extensions: mbstring, xml, ctype, iconv, curl
+          php-version: '8.2'
           tools: composer:v2
 
-      - name: 📦 Install dependencies
-        working-directory: ./backend
-        run: composer install --no-dev --optimize-autoloader
+      - name: 📦 Install Backend Deps
+        run: |
+          cd backend
+          composer install --no-dev --optimize-autoloader
 
-      - name: 🚀 Upload backend to Hostpoint
-        uses: appleboy/scp-action@v0.1.7
+      - name: 🚀 Deploy Everything via Rsync
+        uses: appleboy/rsync-action@v0.1.3
         with:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USERNAME }}
           key: ${{ secrets.SFTP_SSH_KEY }}
           port: 22
-          source: "backend/*"
-          strip_components: 1 
-          target: "www/api.frxctured.com/roblox/github-badge"
+          source: "backend,frontend"
+          target: "tmp"
+          # Custom script to move them to the right subdomains after upload
+          script: |
+            # Ensure target directories exist
+            mkdir -p ~/www/api.frxctured.com/roblox/github-badge/
+            mkdir -p ~/www/frxctured.com/roblox-badge/
+            
+            # Move the contents
+            mv ~/tmp/backend/{.,}* ~/www/api.frxctured.com/roblox/github-badge/ 2>/dev/null || true
+            mv ~/tmp/frontend/{.,}* ~/www/frxctured.com/roblox-badge/ 2>/dev/null || true
 
-  build-and-deploy-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v4
-
-      - name: 🚀 Upload frontend to Hostpoint
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SFTP_SERVER }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          key: ${{ secrets.SFTP_SSH_KEY }}
-          port: 22
-          source: "frontend/*"
-          strip_components: 1 
-          target: "www/frxctured.com/roblox-badge"
+            # Cleanup tmp
+            rm -rf ~/tmp/backend ~/tmp/frontend
