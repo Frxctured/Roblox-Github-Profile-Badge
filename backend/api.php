@@ -55,9 +55,8 @@ function get_status_badge($userID) {
     );
 
     header("Content-Type: image/svg+xml");
-    header("Cache-Control: no-cache, no-store, must-revalidate, max-age=0");
-    header("Pragma: no-cache");
-    header("Expires: 1");
+    header("Cache-Control: s-maxage=1, max-age=0, must-revalidate");
+    header("Expires: 0");
     
     echo $output;
 }
